@@ -1,0 +1,265 @@
+{
+  "$comment": "Conformance fixtures for MCPulse args_hash. Every MCPulse SDK, in every language, must turn `input` into exactly `canonical` (RFC 8785) and then into `args_hash` (first 12 lowercase hex of the SHA-256 of the canonical form, UTF-8). Do not edit by hand.",
+  "wire_version": 1,
+  "algorithm": "sha256/rfc8785/hex12",
+  "fixtures": [
+    {
+      "name": "empty object",
+      "input": {},
+      "canonical": "{}",
+      "args_hash": "44136fa355b3"
+    },
+    {
+      "name": "empty array",
+      "input": [],
+      "canonical": "[]",
+      "args_hash": "4f53cda18c2b"
+    },
+    {
+      "name": "literals",
+      "input": {
+        "t": true,
+        "f": false,
+        "n": null
+      },
+      "canonical": "{\"f\":false,\"n\":null,\"t\":true}",
+      "args_hash": "22e00dc2f7b0"
+    },
+    {
+      "name": "keys are sorted",
+      "input": {
+        "b": 2,
+        "a": 1,
+        "c": 3
+      },
+      "canonical": "{\"a\":1,\"b\":2,\"c\":3}",
+      "args_hash": "e6a3385fb77c"
+    },
+    {
+      "name": "keys are sorted at every depth",
+      "input": {
+        "o": {
+          "z": 1,
+          "a": {
+            "y": 1,
+            "b": 2
+          }
+        }
+      },
+      "canonical": "{\"o\":{\"a\":{\"b\":2,\"y\":1},\"z\":1}}",
+      "args_hash": "9acedf75fbbe"
+    },
+    {
+      "name": "array order is preserved",
+      "input": {
+        "ids": [
+          3,
+          1,
+          2
+        ]
+      },
+      "canonical": "{\"ids\":[3,1,2]}",
+      "args_hash": "2432a382194c"
+    },
+    {
+      "name": "arrays of objects keep order, objects inside them sort",
+      "input": {
+        "xs": [
+          {
+            "b": 1,
+            "a": 2
+          },
+          {
+            "d": 1,
+            "c": 2
+          }
+        ]
+      },
+      "canonical": "{\"xs\":[{\"a\":2,\"b\":1},{\"c\":2,\"d\":1}]}",
+      "args_hash": "3f435a1b59fb"
+    },
+    {
+      "name": "non-ascii is never escaped",
+      "input": {
+        "s": "café",
+        "clé": "naïve",
+        "emoji": "🚀"
+      },
+      "canonical": "{\"clé\":\"naïve\",\"emoji\":\"🚀\",\"s\":\"café\"}",
+      "args_hash": "83fbb23b7e85"
+    },
+    {
+      "name": "html characters are not escaped",
+      "input": {
+        "s": "a<b>c&d"
+      },
+      "canonical": "{\"s\":\"a<b>c&d\"}",
+      "args_hash": "21bc6e14fd14"
+    },
+    {
+      "name": "control characters use the short escape where one exists",
+      "input": {
+        "s": "\b\t\n\f\r\"\\"
+      },
+      "canonical": "{\"s\":\"\\b\\t\\n\\f\\r\\\"\\\\\"}",
+      "args_hash": "bfe21ab9f72a"
+    },
+    {
+      "name": "other control characters are \\u00xx",
+      "input": {
+        "s": "\u0000\u0001\u001f"
+      },
+      "canonical": "{\"s\":\"\\u0000\\u0001\\u001f\"}",
+      "args_hash": "3c7d87189d5a"
+    },
+    {
+      "name": "integral floats lose the decimal",
+      "input": {
+        "a": 1,
+        "b": 0,
+        "c": 2.5
+      },
+      "canonical": "{\"a\":1,\"b\":0,\"c\":2.5}",
+      "args_hash": "319ef1e0e8cf"
+    },
+    {
+      "name": "number formats follow ecmascript",
+      "input": {
+        "a": 1e+21,
+        "b": 1e-7,
+        "c": 0.1,
+        "d": 0.000001,
+        "e": 1.2345678901234568e+29
+      },
+      "canonical": "{\"a\":1e+21,\"b\":1e-7,\"c\":0.1,\"d\":0.000001,\"e\":1.2345678901234568e+29}",
+      "args_hash": "e2083654676a"
+    },
+    {
+      "name": "negative and exponent forms",
+      "input": {
+        "a": -1.5e-9,
+        "b": 1.7976931348623157e+308,
+        "c": 5e-324
+      },
+      "canonical": "{\"a\":-1.5e-9,\"b\":1.7976931348623157e+308,\"c\":5e-324}",
+      "args_hash": "36228e67fce2"
+    },
+    {
+      "name": "integers stay integers",
+      "input": {
+        "a": 0,
+        "b": 0,
+        "c": 9007199254740991,
+        "d": -9007199254740991
+      },
+      "canonical": "{\"a\":0,\"b\":0,\"c\":9007199254740991,\"d\":-9007199254740991}",
+      "args_hash": "305969d56d33"
+    },
+    {
+      "name": "keys sort by utf-16 code units",
+      "input": {
+        "�": 1,
+        "🚀": 2,
+        "é": 3,
+        "a": 4
+      },
+      "canonical": "{\"a\":4,\"é\":3,\"🚀\":2,\"�\":1}",
+      "args_hash": "9392af51bdbc"
+    },
+    {
+      "name": "ascii key ordering is bytewise",
+      "input": {
+        "0": 5,
+        "A": 1,
+        "a": 2,
+        "Z": 3,
+        "z": 4,
+        "_": 6
+      },
+      "canonical": "{\"0\":5,\"A\":1,\"Z\":3,\"_\":6,\"a\":2,\"z\":4}",
+      "args_hash": "2585212f327e"
+    },
+    {
+      "name": "empty string key and value",
+      "input": {
+        "": ""
+      },
+      "canonical": "{\"\":\"\"}",
+      "args_hash": "86cfeee6df38"
+    },
+    {
+      "name": "nested emptiness",
+      "input": {
+        "a": {},
+        "b": [],
+        "c": [
+          {}
+        ],
+        "d": [
+          []
+        ]
+      },
+      "canonical": "{\"a\":{},\"b\":[],\"c\":[{}],\"d\":[[]]}",
+      "args_hash": "f9f9cf5643a2"
+    },
+    {
+      "name": "deep nesting",
+      "input": {
+        "a": {
+          "b": {
+            "c": {
+              "d": {
+                "e": [
+                  1,
+                  {
+                    "f": "g"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "canonical": "{\"a\":{\"b\":{\"c\":{\"d\":{\"e\":[1,{\"f\":\"g\"}]}}}}}",
+      "args_hash": "064c8c46772c"
+    },
+    {
+      "name": "null inside an array",
+      "input": {
+        "xs": [
+          null,
+          1,
+          null
+        ]
+      },
+      "canonical": "{\"xs\":[null,1,null]}",
+      "args_hash": "8c8dd2e0ffd5"
+    },
+    {
+      "name": "a realistic call",
+      "input": {
+        "query": "quarterly revenue",
+        "limit": 25,
+        "filters": {
+          "region": "EMEA",
+          "active": true
+        }
+      },
+      "canonical": "{\"filters\":{\"active\":true,\"region\":\"EMEA\"},\"limit\":25,\"query\":\"quarterly revenue\"}",
+      "args_hash": "52a4fe5fc814"
+    },
+    {
+      "name": "the same call, keys reordered",
+      "input": {
+        "filters": {
+          "active": true,
+          "region": "EMEA"
+        },
+        "limit": 25,
+        "query": "quarterly revenue"
+      },
+      "canonical": "{\"filters\":{\"active\":true,\"region\":\"EMEA\"},\"limit\":25,\"query\":\"quarterly revenue\"}",
+      "args_hash": "52a4fe5fc814"
+    }
+  ]
+}
