@@ -3,9 +3,10 @@ package mcpulse
 // The cross-language contract.
 //
 // testdata/canonical.json is the shared conformance suite, copied from
-// mcpulse-sdk-spec. The TypeScript and Python SDKs run the same file. If it
-// passes in all three, their hashes are interchangeable and a customer running
-// more than one sees one set of numbers rather than several.
+// packages/schemas/fixtures in the mcpulse monorepo. Every other MCPulse SDK
+// runs the same file. If it passes in all of them, their hashes are
+// interchangeable and a customer running more than one sees one set of numbers
+// rather than several.
 //
 // Never edit a fixture to make a failure go away — these hashes are in the
 // product's history, and rewriting one rewrites what every stored row means.
