@@ -5,6 +5,8 @@ Analytics for MCP servers, for the [official Go MCP SDK](https://github.com/mode
 One import, one wrap — see which of your tools actually work for the models
 calling them.
 
+**[getmcpulse.com](https://getmcpulse.com)** · [Docs](https://docs.getmcpulse.com) · [Dashboard](https://app.getmcpulse.com)
+
 ```go
 import (
     "github.com/modelcontextprotocol/go-sdk/mcp"
